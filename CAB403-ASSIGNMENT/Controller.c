@@ -1,13 +1,9 @@
 /*================================================================
-
-    Overseer:
-
+    Controller:
     Laku Jackson
     Aung 
     Saw
-
 Acknowledgement of Assignment based off Tutorial 7 
-
 =================================================================*/
 #include <stdio.h>
 #include <stdlib.h>
@@ -58,7 +54,9 @@ int main(int argc, char *argv[])
     if (connect(sockfd, (struct sockaddr *)&their_addr,
                 sizeof(struct sockaddr)) == -1)
     {
-        perror("connect");
+        printf("\n");
+        fprintf(stderr,"could not connect at %s %d\n", argv[1], port);
+        //perror("Could not connect at ");
         exit(1);
     }
 
