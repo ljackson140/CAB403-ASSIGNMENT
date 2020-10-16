@@ -1,13 +1,9 @@
 /*================================================================
-
     Overseer:
-
     Laku Jackson
     Aung 
     Saw
-
 Acknowledgement of Assignment based off Tutorial 7 
-
 =================================================================*/
 
 #include <arpa/inet.h>
@@ -20,6 +16,7 @@ Acknowledgement of Assignment based off Tutorial 7
 #include <sys/socket.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <time.h>
 
 /* Amount of penidng connections */
 #define BACKLOG 10 
@@ -30,10 +27,14 @@ struct sockaddr_in my_addr;    /* my address information */
 struct sockaddr_in their_addr; /* connector's address information */
 socklen_t sin_size;
 
-
-
 int main(int argc, char *argv[])
 {
+    /* time variables  */
+    struct tm *local;
+    time_t overseerTime;
+    overseerTime = time(NULL);
+    local = localtime(&overseerTime);
+
     
 
     /* generate the socket */
@@ -80,13 +81,13 @@ int main(int argc, char *argv[])
 
 
     printf("server starts listening ...\n");
+ 
+
 
 /*===================================================================================*
-
 Main function:               Main loop of the server
-
 =====================================================================================*/
-         
+  
 
     
     while (1)
@@ -98,8 +99,16 @@ Main function:               Main loop of the server
             perror("accept");
             continue;
         }
-        printf("server: got connection from %s\n",
-               inet_ntoa(their_addr.sin_addr));
+        //printf("server: got connection from %s\n",
+           //    inet_ntoa(their_addr.sin_addr));
+        //printf("");
+
+        printf("%d-%d-%d %d:%d:%d", local->tm_year + 1900,local->tm_mon + 1, local->tm_mday, //date
+                        local->tm_hour, local->tm_min, local->tm_sec);
+
+        printf(" - connection recieved from %s\n",
+                    inet_ntoa(their_addr.sin_addr)); //IP address
+
         if (!fork())
         { 
             if (send(new_fd, "Hello, world!\n", 14, 0) == -1) //Child process
