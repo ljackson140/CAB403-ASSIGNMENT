@@ -186,6 +186,11 @@ Main function:               Main loop of the server
                         local->tm_hour, local->tm_min, local->tm_sec, file_execution, status_code);
         }
         
+        //TODO: figure out correct implementation of status code
+
+        //FIX HAS been executed with additional args
+
+        //implement simple arguement and that should be it for part A.
         
         
 
