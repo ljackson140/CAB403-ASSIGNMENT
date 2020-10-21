@@ -18,7 +18,7 @@ Acknowledgement of Assignment based off Tutorial 7
 #include <unistd.h>
 #include <time.h>
 
-/* Amount of penidng connections */
+/* Amount of pending connections */
 #define BACKLOG 10 
 
 /* Global variables for connectivity */
@@ -26,6 +26,18 @@ int sockfd, new_fd;            /* listen on sock_fd, new connection on new_fd */
 struct sockaddr_in my_addr;    /* my address information */
 struct sockaddr_in their_addr; /* connector's address information */
 socklen_t sin_size;
+
+
+/*=========================
+
+    Executing file function
+
+===========================*/
+
+int file_exec(char * filepath, char * filename[])
+{
+    
+}
 
 int main(int argc, char *argv[])
 {
@@ -98,10 +110,7 @@ Main function:               Main loop of the server
         {
             perror("accept");
             continue;
-        }
-        //printf("server: got connection from %s\n",
-           //    inet_ntoa(their_addr.sin_addr));
-        //printf("");
+        }2
 
         printf("%d-%d-%d %d:%d:%d", local->tm_year + 1900,local->tm_mon + 1, local->tm_mday, //date
                         local->tm_hour, local->tm_min, local->tm_sec);
