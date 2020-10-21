@@ -19,7 +19,7 @@ Acknowledgement of Assignment based off Tutorial 7
 
 int main(int argc, char *argv[])
 {
-    int sockfd, numbytes;
+    int sockfd, numbytes, result;
     char buf[MAXDATASIZE];
     struct hostent *he;
     struct sockaddr_in their_addr; // Clients connector's address information 
@@ -29,6 +29,20 @@ int main(int argc, char *argv[])
         fprintf(stderr, "usage: <address> <port>\n");
         exit(1);
     }
+
+    /* if the first argument is --help, output the following */
+    result = strcmp(argv[1], "--help");
+
+    if (result == 0)
+    {
+        printf("Usage: controller <address> <port> {[-o out_file] [-log log_file] [-t seconds] <file> [arg...] | mem [pid] | memkill <percent>}");
+    }
+    else
+    {
+        /* order the arguments */
+        
+    }
+    
 
     int port = atoi(argv[2]);
 
