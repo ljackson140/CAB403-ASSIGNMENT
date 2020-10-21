@@ -19,13 +19,8 @@ Acknowledgement of Assignment based off Tutorial 7
 
 int main(int argc, char *argv[])
 {
-<<<<<<< HEAD
     char buffer[SIZEOF_ARG_DATA];
-    int sockfd, numbytes;
-=======
     int sockfd, numbytes, result;
-    char buf[MAXDATASIZE];
->>>>>>> 4d5fecd62194782d9745abc6cc5c091ea8f29133
     struct hostent *he;
     struct sockaddr_in their_addr; // Clients connector's address information 
 
@@ -35,7 +30,6 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-<<<<<<< HEAD
     if (argc < 3)
     {
         fprintf(stderr, "usage: <address> <port> {[-o out_file] [-log log_file] [-t seconds]<file> [arg...] | mem [pid] | memkill <percent>}\n");
@@ -47,7 +41,6 @@ int main(int argc, char *argv[])
     int port = atoi(argv[2]);  
     
         
-=======
     /* if the first argument is --help, output the following */
     result = strcmp(argv[1], "--help");
 
@@ -63,7 +56,6 @@ int main(int argc, char *argv[])
     
 
     int port = atoi(argv[2]);
->>>>>>> 4d5fecd62194782d9745abc6cc5c091ea8f29133
 
     if ((he = gethostbyname(argv[1])) == NULL)
     { /* get the host info */

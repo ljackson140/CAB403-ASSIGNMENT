@@ -20,9 +20,11 @@ Acknowledgement of Assignment based off Tutorial 7
 
 /* Amount of pending connections */
 #define BACKLOG 10 
+#define SIZEOF_ARG_DATA 100
 
 /* Global variables for connectivity */
-int sockfd, new_fd;            /* listen on sock_fd, new connection on new_fd */
+int sockfd, new_fd, retrieve;            /* listen on sock_fd, new connection on new_fd */
+char buffer[SIZEOF_ARG_DATA];
 struct sockaddr_in my_addr;    /* my address information */
 struct sockaddr_in their_addr; /* connector's address information */
 socklen_t sin_size;
@@ -36,7 +38,10 @@ socklen_t sin_size;
 
 int file_exec(char * filepath, char * filename[])
 {
-    
+    retrieve = execv(filepath, filename);
+    retrieve = 20;
+    perror("unable to execute");
+    return retrieve;
 }
 
 int main(int argc, char *argv[])
