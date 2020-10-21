@@ -24,11 +24,13 @@ int main(int argc, char *argv[])
     struct hostent *he;
     struct sockaddr_in their_addr; // Clients connector's address information 
 
-    if (argc != 3)
+    int port = atoi(argv[2]);
+
+    /*if (argc != 3)
     {
         fprintf(stderr, "usage: <address> <port>\n");
         exit(1);
-    }
+    }*/
 
     if (argc < 3)
     {
@@ -36,26 +38,19 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    
-
-    int port = atoi(argv[2]);  
-    
         
     /* if the first argument is --help, output the following */
-    result = strcmp(argv[1], "--help");
+    //result = strcmp(argv[1], "--help");
 
-    if (result == 0)
-    {
-        printf("Usage: controller <address> <port> {[-o out_file] [-log log_file] [-t seconds] <file> [arg...] | mem [pid] | memkill <percent>}");
-    }
-    else
-    {
+    //if (result == 0)
+    //{
+    //    printf("Usage: controller <address> <port> {[-o out_file] [-log log_file] [-t seconds] <file> [arg...] | mem [pid] | memkill <percent>}");
+    //}
+    //else
+    //{
         /* order the arguments */
         
-    }
-    
-
-    int port = atoi(argv[2]);
+    //}
 
     if ((he = gethostbyname(argv[1])) == NULL)
     { /* get the host info */

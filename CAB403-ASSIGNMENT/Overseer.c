@@ -23,7 +23,7 @@ Acknowledgement of Assignment based off Tutorial 7
 #define SIZEOF_ARG_DATA 100
 
 /* Global variables for connectivity */
-int sockfd, new_fd, retrieve;            /* listen on sock_fd, new connection on new_fd */
+int sockfd, new_fd, retrieve, num_bytes;            /* listen on sock_fd, new connection on new_fd */
 char buffer[SIZEOF_ARG_DATA];
 struct sockaddr_in my_addr;    /* my address information */
 struct sockaddr_in their_addr; /* connector's address information */
@@ -115,22 +115,83 @@ Main function:               Main loop of the server
         {
             perror("accept");
             continue;
-        }2
+        }
 
-        printf("%d-%d-%d %d:%d:%d", local->tm_year + 1900,local->tm_mon + 1, local->tm_mday, //date
-                        local->tm_hour, local->tm_min, local->tm_sec);
+        printf("%d-%d-%d %d:%d:%d - connection recieved from %s\n", local->tm_year + 1900,local->tm_mon + 1, local->tm_mday, //date
+                        local->tm_hour, local->tm_min, local->tm_sec, inet_ntoa(their_addr.sin_addr));
 
-        printf(" - connection recieved from %s\n",
-                    inet_ntoa(their_addr.sin_addr)); //IP address
+        /*printf(" - connection recieved from %s\n",
+                    inet_ntoa(their_addr.sin_addr)); //IP address*/
 
-        if (!fork())
+        /*if (!fork())
         { 
             if (send(new_fd, "Hello, world!\n", 14, 0) == -1) //Child process
                 perror("send");
             close(new_fd);
             exit(0);
         }
-        close(new_fd); 
+        close(new_fd);*/
+
+        //TODO: Recieve args from controller
+        if ((num_bytes = recv(new_fd, buffer, SIZEOF_ARG_DATA, 0)) == -1)
+        {
+            perror("recv");
+            exit(1);
+        }
+
+        //TODO: logging first execution
+        fprintf(stdout,"%d-%d-%d %d:%d:%d - attempting to execute %s\n", local->tm_year + 1900,local->tm_mon + 1, local->tm_mday, //date
+                        local->tm_hour, local->tm_min, local->tm_sec, buffer); 
+
+        //TODO: Split up buffer to retrieve arguments and filepath
+        char * filepath = buffer;
+        int ptr_tokens = 0;
+        char * storage_toks[25];
+        storage_toks[0] = strtok(buffer, " "); //fetch first token within string upon space
+
+        while (storage_toks[ptr_tokens] != NULL)
+        {
+            ptr_tokens++;
+            storage_toks[ptr_tokens] = strtok(NULL, " ");
+        }
+
+        char * filename[ptr_tokens+1];
+        memset(filename, 0, ptr_tokens + 1); //pointer to memory
+
+        //TODO: store agrs into an array
+        for (int i = 0; i < ptr_tokens; i++)
+        {
+            filename[i] = storage_toks[i];
+        }
+        filename[ptr_tokens] = (char *) NULL; /*last elemnet is NULL*/
+
+        //TODO: fork file
+        pid_t file_execution = fork();
+        int update;
+        int status_code = 0;
+
+        if(file_execution == -1)
+        {
+            fprintf(stdout,"%d-%d-%d %d:%d:%d - could not execute %s\n", local->tm_year + 1900,local->tm_mon + 1, local->tm_mday, //date
+                        local->tm_hour, local->tm_min, local->tm_sec, buffer);
+        } else if (file_execution == 0)
+        {
+            status_code = file_exec(filename[0], filename);
+            fprintf(stdout,"%d-%d-%d %d:%d:%d - %s has been executed with pid %d\n", local->tm_year + 1900,local->tm_mon + 1, local->tm_mday, //date
+                        local->tm_hour, local->tm_min, local->tm_sec, buffer, getpid());
+        } else
+        {
+            wait(&update);
+            fprintf(stdout,"%d-%d-%d %d:%d:%d - %d has terminated with status code %d\n", local->tm_year + 1900,local->tm_mon + 1, local->tm_mday, //date
+                        local->tm_hour, local->tm_min, local->tm_sec, file_execution, status_code);
+        }
+        
+        
+        
+
+
+        
+        
 
         while (waitpid(-1, NULL, WNOHANG) > 0)
             ;
