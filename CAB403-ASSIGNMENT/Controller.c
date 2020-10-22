@@ -17,6 +17,9 @@ Acknowledgement of Assignment based off Tutorial 7
 
 #define SIZEOF_ARG_DATA 100 /* max number of bytes we can get at once */
 
+// int usage(char *str);
+// int invalid(char *str);
+
 int main(int argc, char *argv[])
 {
     char buffer[SIZEOF_ARG_DATA];
@@ -30,16 +33,17 @@ int main(int argc, char *argv[])
     result = strcmp("--help", argv[1]);
     if (argc == 2 && result == 0)
     {
-        return usage(usageMessage);
+        fprintf(stdout, "Usage: <address> <port> {[-o out_file] [-log log_file] [-t seconds]<file> [arg...] | mem [pid] | memkill <percent>}\n");
+        //return usage(usageMessage);
     }
     else
     {
         int port = atoi(argv[2]);
-        if (argc != 3)
-        {
-            fprintf(stderr, "usage: <address> <port>\n");
-            exit(1);
-        }
+        // if (argc != 3)
+        // {
+        //     fprintf(stderr, "usage: <address> <port>\n");
+        //     exit(1);
+        // }
 
         if ((he = gethostbyname(argv[1])) == NULL)
         { /* get the host info */
@@ -114,14 +118,14 @@ int main(int argc, char *argv[])
     }
 }
 
-int usage(char *str)
-{
-    fprintf(stdout, "%s", str);
-    return 1;
-}
+// int usage(char *str)
+// {
+//     fprintf(stdout, "%s", str);
+//     return 1;
+// }
 
-int invalid(char *str)
-{
-    fprintf(stderr, "%s", str);
-    return 1;
-}
+// int invalid(char *str)
+// {
+//     fprintf(stderr, "%s", str);
+//     return 1;
+// }
