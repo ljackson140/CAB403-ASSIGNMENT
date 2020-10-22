@@ -14,8 +14,10 @@ Acknowledgement of Assignment based off Tutorial 7
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#include <stdbool.h>
 
 #define MAXDATASIZE 100 /* max number of bytes we can get at once */
+#define MIN_ARGC 3      /* minimum number of arguments */
 
 int main(int argc, char *argv[])
 {
@@ -24,27 +26,22 @@ int main(int argc, char *argv[])
     struct hostent *he;
     struct sockaddr_in their_addr; // Clients connector's address information 
 
-    if (argc != 3)
-    {
-        fprintf(stderr, "usage: <address> <port>\n");
-        exit(1);
-    }
+    char *usage = "Usage: controller <address> <port> {[-o out_file] [-log log_file] [-t seconds] <file> [arg...] | mem [pid] | memkill <percent>}";
+    
+    int port;
 
     /* if the first argument is --help, output the following */
     result = strcmp(argv[1], "--help");
 
-    if (result == 0)
+    if (result == 0 && argc < 3)
     {
-        printf("Usage: controller <address> <port> {[-o out_file] [-log log_file] [-t seconds] <file> [arg...] | mem [pid] | memkill <percent>}");
+        return help(usage);
     }
     else
     {
         /* order the arguments */
-        
+        port = atoi(argv[2]);
     }
-    
-
-    int port = atoi(argv[2]);
 
     if ((he = gethostbyname(argv[1])) == NULL)
     { /* get the host info */
@@ -69,7 +66,7 @@ int main(int argc, char *argv[])
                 sizeof(struct sockaddr)) == -1)
     {
         printf("\n");
-        fprintf(stderr,"could not connect at %s %d\n", argv[1], port);
+        fprintf(stderr,"Could not connect at %s %d\n", argv[1], port);
         //perror("Could not connect at ");
         exit(1);
     }
@@ -87,4 +84,16 @@ int main(int argc, char *argv[])
     close(sockfd);
 
     return 0;
+}
+
+int help(char *str)
+{
+    fprintf(stdout, "%s", str);
+    return 1;
+}
+
+int invalid(char *str)
+{
+    fprintf(stderr, "%s", str);
+    return 1;
 }

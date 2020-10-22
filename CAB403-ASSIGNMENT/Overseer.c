@@ -21,6 +21,9 @@ Acknowledgement of Assignment based off Tutorial 7
 /* Amount of penidng connections */
 #define BACKLOG 10 
 
+/* Fixed number of thread pool */
+#define NUM_THREADPOOL 5
+
 /* Global variables for connectivity */
 int sockfd, new_fd;            /* listen on sock_fd, new connection on new_fd */
 struct sockaddr_in my_addr;    /* my address information */
