@@ -16,7 +16,7 @@ Acknowledgement of Assignment based off Tutorial 7
 #include <unistd.h>
 
 #define SIZEOF_ARG_DATA 100 /* max number of bytes we can get at once */
-#define MIN_REQUIRED 3
+#define MIN_REQUIRED 4
 
 int validate_arguments(int argc, char *argv[]);
 // int usage(char *str);
@@ -37,6 +37,11 @@ int validate_arguments(int argc, char *argv[])
     {
         return 1;
     }
+    else
+    {
+        return 0;
+    }
+    
 
     //iterate the arguments
     for (int i = 1; i < (argc - 1); i++)
@@ -64,13 +69,14 @@ int validate_arguments(int argc, char *argv[])
             continue;
         }
 
-        if (strcmp("-log", argv[i]) == 0)
-        {
-            logIndex = i;
-            isValidated = 0;
-            printf("log file decteded %s\n", argv[++i]);
-            continue;
-        }
+        //TODO:time
+        // if (strcmp("-t", argv[i]) == 0)
+        // {
+        //     timeIndex = i;
+        //     isValidated = 0;
+        //     printf("time decteded %s\n", argv[++i]);
+        //     continue;
+        // }
     }
 
     if (logIndex > 0)
