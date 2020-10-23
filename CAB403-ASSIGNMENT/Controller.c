@@ -16,9 +16,78 @@ Acknowledgement of Assignment based off Tutorial 7
 #include <unistd.h>
 
 #define SIZEOF_ARG_DATA 100 /* max number of bytes we can get at once */
+#define MIN_REQUIRED 3
 
+int validate_arguments(int argc, char *argv[]);
 // int usage(char *str);
 // int invalid(char *str);
+int help()
+{
+    fprintf(stdout, "Usage: <address> <port> {[-o out_file] [-log log_file] [-t seconds]<file> [arg...] | mem [pid] | memkill <percent>}\n");
+    return 1;
+}
+
+int validate_arguments(int argc, char *argv[])
+{
+    int isValidated = 1;
+    int outIndex = 0;
+    int logIndex = 0;
+
+    if (argc < MIN_REQUIRED)
+    {
+        return 1;
+    }
+
+    //iterate the arguments
+    for (int i = 1; i < (argc - 1); i++)
+    {
+        if (strcmp("--help", argv[i]) == 0)
+        {
+            isValidated = 1;
+            return help();
+            continue;
+        }
+        
+        if (strcmp("-o", argv[i]) == 0)
+        {
+            outIndex = i;
+            isValidated = 0;
+            printf("out file decteded %s\n", argv[++i]);
+            continue;
+        }
+
+        if (strcmp("-log", argv[i]) == 0)
+        {
+            logIndex = i;
+            isValidated = 0;
+            printf("log file decteded %s\n", argv[++i]);
+            continue;
+        }
+
+        if (strcmp("-log", argv[i]) == 0)
+        {
+            logIndex = i;
+            isValidated = 0;
+            printf("log file decteded %s\n", argv[++i]);
+            continue;
+        }
+    }
+
+    if (logIndex > 0)
+    {
+        if (outIndex < logIndex)
+        {
+            isValidated = 0;
+            printf("order correct\n");
+        }
+        else
+        {
+            isValidated = 1;
+            printf("order wrong\n");
+        }
+    }
+    return isValidated;
+}
 
 int main(int argc, char *argv[])
 {
@@ -29,14 +98,8 @@ int main(int argc, char *argv[])
 
     char *usageMessage = "Usage: <address> <port> {[-o out_file] [-log log_file] [-t seconds]<file> [arg...] | mem [pid] | memkill <percent>}\n";
 
-    /* When the first argument is '--help', usage message is written to stdout */
-    result = strcmp("--help", argv[1]);
-    if (argc == 2 && result == 0)
-    {
-        fprintf(stdout, "Usage: <address> <port> {[-o out_file] [-log log_file] [-t seconds]<file> [arg...] | mem [pid] | memkill <percent>}\n");
-        //return usage(usageMessage);
-    }
-    else
+    //validate the argumenents if no error return 0 otherwise 1
+    if(validate_arguments(argc, argv) == 0)
     {
         int port = atoi(argv[2]);
         // if (argc != 3)
@@ -113,9 +176,15 @@ int main(int argc, char *argv[])
         }
 
         close(sockfd);
-
-        return 0;
     }
+    else
+    {
+        //do something
+        help();
+    }
+    
+    
+    return 0;
 }
 
 // int usage(char *str)
