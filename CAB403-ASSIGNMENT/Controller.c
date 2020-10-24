@@ -110,52 +110,10 @@ int validate_arguments(int argc, char *argv[])
     return isValidated;
 }
 
-int main(int argc, char *argv[])
+void send_data(int argc, char *argv[], int sockfd)
 {
     char buffer[SIZEOF_ARG_DATA];
-    int sockfd, numbytes, result;
-    struct hostent *he;
-    struct sockaddr_in their_addr; // Clients connector's address information
-
-    //validate the argumenents if no error return 0 otherwise 1
-    if(validate_arguments(argc, argv) == 0)
-    {
-        int port = atoi(argv[2]);
-        // if (argc != 3)
-        // {
-        //     fprintf(stderr, "usage: <address> <port>\n");
-        //     exit(1);
-        // }
-
-        if ((he = gethostbyname(argv[1])) == NULL)
-        { /* get the host info */
-            herror("gethostbyname");
-            exit(1);
-        }
-
-        if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
-        {
-            perror("socket");
-            exit(1);
-        }
-
-        /* clear address struct */
-        memset(&their_addr, 0, sizeof(their_addr));
-
-        their_addr.sin_family = AF_INET;   /* host byte order */
-        their_addr.sin_port = htons(port); /* short, network byte order */
-        their_addr.sin_addr = *((struct in_addr *)he->h_addr);
-
-        if (connect(sockfd, (struct sockaddr *)&their_addr,
-                    sizeof(struct sockaddr)) == -1)
-        {
-            printf("\n");
-            fprintf(stderr, "could not connect to overseer at %s %d\n", argv[1], port);
-            //perror("Could not connect at ");
-            exit(1);
-        }
-
-        //TODO: Get contents from command line to send to server
+    //TODO: Get contents from command line to send to server
         char *send_file;
         if (argc >= 3)
         {
@@ -193,6 +151,47 @@ int main(int argc, char *argv[])
         {
             perror("Arguments have been sent");
         }
+}
+
+int main(int argc, char *argv[])
+{
+    int sockfd, numbytes, result;
+    struct hostent *he;
+    struct sockaddr_in their_addr; // Clients connector's address information
+
+    //validate the argumenents if no error return 0 otherwise 1
+    if(validate_arguments(argc, argv) == 0)
+    {
+        int port = atoi(argv[2]);
+
+        if ((he = gethostbyname(argv[1])) == NULL)
+        { /* get the host info */
+            herror("gethostbyname");
+            exit(1);
+        }
+
+        if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
+        {
+            perror("socket");
+            exit(1);
+        }
+
+        /* clear address struct */
+        memset(&their_addr, 0, sizeof(their_addr));
+
+        their_addr.sin_family = AF_INET;   /* host byte order */
+        their_addr.sin_port = htons(port); /* short, network byte order */
+        their_addr.sin_addr = *((struct in_addr *)he->h_addr);
+
+        if (connect(sockfd, (struct sockaddr *)&their_addr, sizeof(struct sockaddr)) == -1)
+        {
+            printf("\n");
+            fprintf(stderr, "could not connect to overseer at %s %s\n", argv[1], argv[2]);
+            //perror("Could not connect at ");
+            exit(1);
+        }
+
+        send_data(argc, argv, sockfd);
 
         /* close the socket */
         close(sockfd);
