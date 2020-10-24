@@ -117,8 +117,6 @@ int main(int argc, char *argv[])
     struct hostent *he;
     struct sockaddr_in their_addr; // Clients connector's address information
 
-    char *usageMessage = "Usage: <address> <port> {[-o out_file] [-log log_file] [-t seconds]<file> [arg...] | mem [pid] | memkill <percent>}\n";
-
     //validate the argumenents if no error return 0 otherwise 1
     if(validate_arguments(argc, argv) == 0)
     {
@@ -202,7 +200,7 @@ int main(int argc, char *argv[])
     else
     {
         /* print the usage message to stderr when arguments are invalid */
-        fprintf(stderr, "Usage: <address> <port> {[-o out_file] [-log log_file] [-t seconds]<file> [arg...] | mem [pid] | memkill <percent>}\n");
+        help();
     }
     return 0;
 }
