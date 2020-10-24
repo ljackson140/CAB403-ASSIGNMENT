@@ -32,6 +32,7 @@ int validate_arguments(int argc, char *argv[])
     int isValidated = 1;
     int outIndex = 0;
     int logIndex = 0;
+    int arg_count = argc;
 
     if (argc < MIN_REQUIRED)
     {
@@ -39,9 +40,8 @@ int validate_arguments(int argc, char *argv[])
     }
     else
     {
-        return 0;
+        isValidated = 0;
     }
-    
 
     //iterate the arguments
     for (int i = 1; i < (argc - 1); i++)
@@ -57,6 +57,7 @@ int validate_arguments(int argc, char *argv[])
         {
             outIndex = i;
             isValidated = 0;
+            arg_count += -2;
             printf("out file decteded %s\n", argv[++i]);
             continue;
         }
@@ -65,6 +66,7 @@ int validate_arguments(int argc, char *argv[])
         {
             logIndex = i;
             isValidated = 0;
+            arg_count += -2;
             printf("log file decteded %s\n", argv[++i]);
             continue;
         }
@@ -79,6 +81,7 @@ int validate_arguments(int argc, char *argv[])
         // }
     }
 
+    //check the order of -o and -log
     if (logIndex > 0)
     {
         if (outIndex < logIndex)
@@ -92,6 +95,18 @@ int validate_arguments(int argc, char *argv[])
             printf("order wrong\n");
         }
     }
+
+    //check file path was included
+    if (arg_count == MIN_REQUIRED)
+    {
+        isValidated = 0;
+    }
+    else
+    {
+        isValidated = 1;
+        printf("required file\n");
+    }
+
     return isValidated;
 }
 
