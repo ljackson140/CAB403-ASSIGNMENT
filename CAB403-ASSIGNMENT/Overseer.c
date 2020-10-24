@@ -47,16 +47,8 @@ int file_exec(char * filepath, char * filename[])
     return retrieve;
 }
 
-int main(int argc, char *argv[])
+void setup_socket(int argc, char *argv[])
 {
-    /* time variables  */
-    struct tm *local;
-    time_t overseerTime;
-    overseerTime = time(NULL);
-    local = localtime(&overseerTime);
-
-    
-
     /* generate the socket */
     if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
     {
@@ -64,6 +56,7 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
+    //port number
     if (argc != 2)
     {
         fprintf(stderr, "usage: <Port Number>\n");
@@ -76,9 +69,6 @@ int main(int argc, char *argv[])
     int opt_enable = 1;
     setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &opt_enable, sizeof(opt_enable));
     setsockopt(sockfd, SOL_SOCKET, SO_REUSEPORT, &opt_enable, sizeof(opt_enable));
-
-    
-
     
     memset(&my_addr, 0, sizeof(my_addr));
 
@@ -99,19 +89,28 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-
     printf("server starts listening ...\n");
- 
+}
 
+int main(int argc, char *argv[])
+{
+    /* time variables  */
+    struct tm *local;
+    time_t overseerTime;
+    
+    //setup socket
+    setup_socket(argc, argv);
 
 /*===================================================================================*
 Main function:               Main loop of the server
 =====================================================================================*/
   
-
-    
     while (1)
     {
+        //update time
+        overseerTime = time(NULL);
+        local = localtime(&overseerTime);
+
         sin_size = sizeof(struct sockaddr_in);
         if ((new_fd = accept(sockfd, (struct sockaddr *)&their_addr,
                              &sin_size)) == -1)
@@ -119,9 +118,12 @@ Main function:               Main loop of the server
             perror("accept");
             continue;
         }
+        
 
         printf("%d-%d-%d %d:%d:%d - connection recieved from %s\n", local->tm_year + 1900,local->tm_mon + 1, local->tm_mday, //date
                         local->tm_hour, local->tm_min, local->tm_sec, inet_ntoa(their_addr.sin_addr));
+
+        //TODO: create thread here
 
         /*printf(" - connection recieved from %s\n",
                     inet_ntoa(their_addr.sin_addr)); //IP address*/
@@ -195,12 +197,6 @@ Main function:               Main loop of the server
 
         //implement simple arguement and that should be it for part A.
         
-        
-
-
-        
-        
-
         while (waitpid(-1, NULL, WNOHANG) > 0)
             ;
     }
