@@ -196,26 +196,13 @@ int main(int argc, char *argv[])
             perror("Arguments have been sent");
         }
 
+        /* close the socket */
         close(sockfd);
     }
     else
     {
-        //do something
-        help();
+        /* print the usage message to stderr when arguments are invalid */
+        fprintf(stderr, "Usage: <address> <port> {[-o out_file] [-log log_file] [-t seconds]<file> [arg...] | mem [pid] | memkill <percent>}\n");
     }
-    
-    
     return 0;
 }
-
-// int usage(char *str)
-// {
-//     fprintf(stdout, "%s", str);
-//     return 1;
-// }
-
-// int invalid(char *str)
-// {
-//     fprintf(stderr, "%s", str);
-//     return 1;
-// }
